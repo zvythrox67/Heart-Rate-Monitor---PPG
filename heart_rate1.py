@@ -19,3 +19,9 @@ print(make_heartbeat(0.5, 75))
 print("=" * 50)
 print("Heart Rate Monitor")
 print("=" * 50)
+
+heart_rate_target = 75
+beat_count = 0
+last_beat_t = 0
+peak_times = []
+start = time.time()
