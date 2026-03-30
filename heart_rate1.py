@@ -37,10 +37,25 @@ for i in range(500):
         last_beat_t = now
         beat_count = beat_count + 1
         peak_times.append(now)
-        print(f"BEAT {beat_count} at {now:.2f} seconds! Signal: {signal:.3f}")
+        bar_length = int(signal * 40)
+        bar = "█" * bar_length
+        print(f"Beat {beat_count:3d} | {bar} | {signal:.2f}")    
+        if len(peak_times) >= 2:
+            recent = peak_times[-3:] if len(peak_times)== 3 else peak_times
+            intervals = []
+            for j in range(len(recent) - 1):
+                intervals.append(recent[j+1] - recent[j])
+            avg_interval = sum(intervals) / len(intervals)
+        else:
+            current_bpm = 0
+
+        bar_length = int(signal * 40)
+        bar = "█" * bar_length
+        print(f"Beat {beat_count:4d} | {bar} | {current_bpm:3.0f} BPM")
     time.sleep(0.01)
 
 if len(peak_times) >= 2:
     total_time = peak_times[-1] - peak_times[0]
     avg_bpm = 60 / (total_time / (len(peak_times) - 1))
     print(f"Average heart rate: {avg_bpm: .0f} BPM")
+
