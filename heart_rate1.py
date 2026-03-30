@@ -14,3 +14,8 @@ def make_heartbeat(t, heart_rate):
     breathing = math.sin(t * 0.2) * 0.1
 
     return value + noise + breathing
+
+print(make_heartbeat(0.5, 75))
+print("=" * 50)
+print("Heart Rate Monitor")
+print("=" * 50)
