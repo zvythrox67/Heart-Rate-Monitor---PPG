@@ -26,24 +26,21 @@ last_beat_t = 0
 peak_times = []
 start = time.time()
 
-print("Starting...")
-for i in range(100):
-    now = time.time() - start
-    signal = make_heartbeat(now, heart_rate_target)
-    print(f'{now:.2f}: {signal:3f}')
-    time.sleep(0.01)
-
-print("Done")
 
 print ("Looking for heartbeats...")
 
 for i in range(500): 
     now = time.time() - start
-    signal = get_heartbeat(now, heart_rate_target)
+    signal = make_heartbeat(now, heart_rate_target)
 
-    if signal > 0.5 and (now - last_beat_time) > 0.35
-        last_beat_time = now
+    if signal > 0.5 and (now - last_beat_t) > 0.35:
+        last_beat_t = now
         beat_count = beat_count + 1
         peak_times.append(now)
         print(f"BEAT {beat_count} at {now:.2f} seconds! Signal: {signal:.3f}")
     time.sleep(0.01)
+
+if len(peak_times) >= 2:
+    total_time = peak_times[-1] - peak_times[0]
+    avg_bpm = 60 / (total_time / (len(peak_times) - 1))
+    print(f"Average heart rate: {avg_bpm: .0f} BPM")
