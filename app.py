@@ -18,3 +18,15 @@ if 'beat_count' not in st.session_state:
     st.session_state.beat_count = 0
 if 'peak_times' not in st.session_state:
     st.session_state.peak_times = []
+
+col1, col2 = st.colums(2)
+
+with col1:
+    if st.buttom("Start Monitor"):
+        st.session_state.running = True
+        st.session_state.beat_count = 0
+        st.session_state.peak_times = []
+
+with col2:
+    if st.button("Stop"):
+        st.session_state.running = False
