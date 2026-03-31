@@ -49,7 +49,7 @@ try:
         now = time.time() - start
         signal = make_heartbeat(now, heart_rate_target)
 
-        if signal > 0.5 and (now - last_beat_t) > 0.35:
+        if signal > 0.7 and (now - last_beat_t) > 0.6:
             last_beat_t = now
             beat_count = beat_count + 1
             peak_times.append(now)
@@ -64,6 +64,7 @@ try:
                 for j in range(len(recent) - 1):
                     intervals.append(recent[j+1] - recent[j])
                 avg_interval = sum(intervals) / len(intervals)
+                current_bpm = 60 / avg_interval
             else:
                 current_bpm = 0
 
