@@ -30,3 +30,7 @@ with col1:
 with col2:
     if st.button("Stop"):
         st.session_state.running = False
+
+metric_placeholder = st.empty()
+plot_plotholder = st.empty()
+beat_placeholder = st.empty()
