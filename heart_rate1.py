@@ -38,35 +38,39 @@ def make_heartbeat(t, heart_rate):
     noise = math.sin(t * 50) * 0.05
     breathing = math.sin(t * 0.2) * 0.1
 
-    return value + noice + breathing
+    return value + noise + breathing
 
 print ("Looking for heartbeats...")
+print("Press Ctrl+C to stop")
+print()
 
-for i in range(500): 
-    now = time.time() - start
-    signal = make_heartbeat(now, heart_rate_target)
+try:
+    while True:
+        now = time.time() - start
+        signal = make_heartbeat(now, heart_rate_target)
 
-    if signal > 0.5 and (now - last_beat_t) > 0.35:
-        last_beat_t = now
-        beat_count = beat_count + 1
-        peak_times.append(now)
-        bar_length = int(signal * 40)
-        bar = "█" * bar_length
+        if signal > 0.5 and (now - last_beat_t) > 0.35:
+            last_beat_t = now
+            beat_count = beat_count + 1
+            peak_times.append(now)
 
-        print(f"Beat {beat_count:3d} | {bar} | {signal:.2f}")    
-        if len(peak_times) >= 2:
-            recent = peak_times[-3:] if len(peak_times)== 3 else peak_times
-            intervals = []
-            for j in range(len(recent) - 1):
-                intervals.append(recent[j+1] - recent[j])
-            avg_interval = sum(intervals) / len(intervals)
-        else:
-            current_bpm = 0
+            if len(peak_times) >= 2:
+                if len(peak_times) >= 3:
+                    recent = peak_times[-3:]
+                else:
+                    recent = peak_times
 
-        bar_length = int(signal * 40)
-        bar = "█" * bar_length
-        print(f"Beat {beat_count:4d} | {bar} | {current_bpm:3.0f} BPM")
-    time.sleep(0.01)
+                intervals = []
+                for j in range(len(recent) - 1):
+                    intervals.append(recent[j+1] - recent[j])
+                avg_interval = sum(intervals) / len(intervals)
+            else:
+                current_bpm = 0
+
+            bar_length = int(signal * 40)
+            bar = "█" * bar_length
+            print(f"Beat {beat_count:4d} | {bar} | {current_bpm:3.0f} BPM")
+        time.sleep(0.01)
 
 
 except KeyboardInterrupt:
@@ -84,5 +88,7 @@ except KeyboardInterrupt:
 if len(peak_times) >= 2:
     total_time = peak_times[-1] - peak_times[0]
     avg_bpm = 60 / (total_time / (len(peak_times) - 1))
-    print(f"Average heart rate: {avg_bpm: .0f} BPM")
+    print(f"Total time: {total_time:.1f} seconds")
+    print(f"Average heart rate: {avg_bpm:.0f} BPM")
+    print(f"Target heart rate: {heart_rate_target} BPM")
 
