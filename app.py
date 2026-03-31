@@ -1,4 +1,7 @@
 import streamlit as st
+import math
+import time
 
-st.title("Test")
-st.write("This is a test.")
+st.title("Real-Time Heart Rate Monitor")
+st.write("Simulates PPG signals and detects heartbeats in real time.")
+
