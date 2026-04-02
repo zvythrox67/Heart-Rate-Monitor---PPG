@@ -1,6 +1,10 @@
 import streamlit as st
 import math
 import time
+import numpy as np
+import matplotlib.pyplot as plt
+
+
 
 st.set_page_config(page_title= "Heart Rate Monitor")
 
@@ -11,6 +15,20 @@ st.sidebar.header("Settings")
 heart_rate_target = st.sidebar.slider("target Heart Rate (BPM)", 50, 120, 75)
 threshold = st.sidebar.slider("Detection Threshold", 0.5, 0.9, 0.7)
 min_beat_gap = st.sidebar.slider("Min Time Between Beats (seconds)", 0.4, 0.8, 0.6)
+
+def make_heartbeat(t, heart_rate):
+    secounds_per_beat = 60/ heart_rate
+    position_in_beat = (t %secounds_per_beat)/ secounds_per_beat
+
+    if position_in_beat < 0.3:
+        value = (position_in_beat/0.3) ** 2
+    else:
+        value = math.exp(-(position_in_beat - 0.3) * 8)
+
+    noise = math.sin(t * 50) * 0.05
+    breathing = math.sin(t * 0.2) * 0.1
+
+    return value + noise + breathing
 
 if 'running' not in st.session_state:
     st.session_state.running = False
