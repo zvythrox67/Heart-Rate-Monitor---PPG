@@ -85,3 +85,52 @@ if st.session_state.running:
                 current_bpm = 60 / avg_interval
             else:
                 current_bpm = 0
+            
+            beat_placeholder.success(f" Beat {st.session_state.beat_count} detected! BPM: {current_bpm:.0f}")
+        
+        if len(st.session_state.peak_times) >= 2:
+            recent = st.session_state.peak_times[-5:]
+            intervals = []
+            for i in range(len(recent) - 1):
+                intervals.append(recent[i+1] - recent[i])
+            avg_interval = sum(intervals) / len(intervals)
+            current_bpm = 60 / avg_interval
+            metric_placeholder.metric("Current Heart Rate", f"{current_bpm:.0f} BPM")
+        else:
+            metric_placeholder.metric("Current Heart Rate", "--- BPM")
+        
+        fig, ax = plt.subplots(figsize=(10, 4))
+        ax.plot(times, signals, 'b-', linewidth=1.5)
+        
+        for pt in st.session_state.peak_times:
+            if pt <= max(times):
+                idx = min(range(len(times)), key=lambda i: abs(times[i] - pt))
+                if idx < len(signals):
+                    ax.plot(pt, signals[idx], 'ro', markersize=8)
+        
+        ax.set_xlabel("Time (seconds)")
+        ax.set_ylabel("Signal Strength")
+        ax.set_title("Live PPG Signal")
+        ax.set_ylim(0, 1.2)
+        ax.grid(True, alpha=0.3)
+        
+        plot_placeholder.pyplot(fig)
+        plt.close()
+        
+        time.sleep(0.02)
+    
+    if st.session_state.beat_count >= 2:
+        total_time = st.session_state.peak_times[-1] - st.session_state.peak_times[0]
+        avg_bpm = 60 / (total_time / (len(st.session_state.peak_times) - 1))
+        
+        st.success(" Monitoring Complete!")
+        st.write(f"**Total beats:** {st.session_state.beat_count}")
+        st.write(f"**Average BPM:** {avg_bpm:.0f}")
+        
+        if abs(avg_bpm - heart_rate_target) < 5:
+            st.balloons()
+    
+    st.session_state.running = False
+
+st.markdown("---")
+st.markdown("PPG Heart Rate Monitor")
