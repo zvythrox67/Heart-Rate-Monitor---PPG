@@ -48,3 +48,22 @@ if st.session_state.running:
         signal = make_heartbeat(current_time, heart_rate_target)
         times.append(current_time)
         signals.append(signal)
+
+        if len(times) > 250:
+            times = times[-250:]
+            signals = signals[-250:]
+
+        if signal > threshold and (current_time - last_beat_time) > min_beat_gap:
+            last_beat_time = current_time
+            st.session_state.beat_count +=1
+            st.session_state.peak_times.append(current_time)
+
+            if len(st.session_state.peak_times) >= 2:
+                recent = st.session_state.peak_times[-5:]
+                intervals= []
+                for i in range(len(recent) - 1):
+                    intervals.append(recent[i+1] - recent[i])
+                avg_interval = sum(intervals) / len(intervals)
+                current_bpm = 60 / avg_interval
+            else:
+                current_bpm = 0
