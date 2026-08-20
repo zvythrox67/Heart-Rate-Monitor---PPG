@@ -1,6 +1,6 @@
 # Heart Rate Monitor (PPG Simulator)
 
-A real-time heart rate monitor that simulates PPG (photoplethysmogram) signals, detects individual heartbeats, and calculates BPM using peak detection algorithms similar to clinical pulse oximeters.
+A real-time heart rate monitor that simulates PPG (photoplethysmogram) signals, detects individual heartbeats, and calculates BPM using peak detection algorithms similar to clinical pulse oximeters
 
 ## How It Works
 
